@@ -1,0 +1,48 @@
+package handler
+
+import (
+	"encoding/json"
+	"net/http"
+	"strconv"
+
+	"example.com/pkg/products/repository/memory"
+	"example.com/shared/api/core"
+)
+
+// Delete godoc
+// @Summary      Delete a product
+// @Description  Delete a product by ID
+// @Tags         products
+// @Accept       json
+// @Produce      json
+// @Param        id path string  true  "Product ID"
+// @Success      204  "No Content"
+// @Failure      400  {object}  core.ErrorMsg
+// @Router       /products/{id} [delete]
+func Delete(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	id := r.PathValue("id")
+
+	if id == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(core.ErrorMsg{Msg: "missing product id"})
+		return
+	}
+
+	productId, err := strconv.Atoi(id)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(core.ErrorMsg{Msg: "Invalid id"})
+		return
+	}
+
+	err = memory.Delete(productId)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(core.ErrorMsg{Msg: err.Error()})
+		return
+	}
+
+	w.WriteHeader(http.StatusNoContent)
+}
