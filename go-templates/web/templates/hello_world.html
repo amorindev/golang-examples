@@ -1,0 +1,55 @@
+{{define "hello_world"}}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Hello World</h1>
+    
+    <hr />
+    <h2>Blocks - if else</h2>
+    {{if .User.IsActive}}
+      <p>{{.User.Name }} {{.User.LastName }}</p>
+    {{else}}
+      <p>User is not active</p>
+    {{end}}
+
+    <hr />
+    <h2>Blocks - range</h2>
+    {{range .Tasks}} 
+      {{if .IsCompleted}}
+        <p>{{.Text}}</p>
+      {{end}} 
+    {{end}}
+
+    <hr />
+    <h2>Blocks - with + range + if/else</h2>
+    {{with .User}}
+      <p>User is not nil</p>
+    {{end}} 
+    
+    {{with .User.Name}}
+      <p>User name is {{.}}</p>
+    {{end}}
+    
+    {{with .User.Avatar}}
+      <img src="{{.}}" width="100" height="80" alt="image not found">
+    {{end}}
+
+    <hr />
+    <h2></h2>
+    {{with .Tasks}}
+      {{range .}}
+        {{if .IsCompleted}}
+          <p>task completed: {{.Text}}</p>
+        {{else}}
+          <p>task is not completed: {{.Text}}</p>
+        {{end}}
+      {{end}}
+    {{end}}
+  </body>
+</html>
+{{end}}
